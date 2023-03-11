@@ -1,9 +1,12 @@
 ﻿# CMakeList.txt : Top-level CMake project file, do global configuration
 # and include sub-projects here.
 #
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required(VERSION 3.19)
 
 project ("AmbiScreen")
 
-# Include sub-projects.
-add_subdirectory ("AmbiScreen")
+
+add_subdirectory(dependencies/ScreenCaptureLite)
+
+add_subdirectory (AmbiScreen)
+
