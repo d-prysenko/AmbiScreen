@@ -8,5 +8,5 @@ project ("AmbiScreen")
 
 add_subdirectory(dependencies/ScreenCaptureLite)
 
-add_subdirectory (AmbiScreen)
+add_subdirectory(src)
 

@@ -1,8 +1,9 @@
 ﻿# CMakeList.txt : CMake project for AmbiScreen
 
 
-set(AMBISCREEN_SOURCES
-  AmbiScreen.cpp
+set(
+  AMBISCREEN_SOURCES
+  main.cpp
 )
 
 add_executable(
