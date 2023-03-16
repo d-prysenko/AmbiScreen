@@ -4,6 +4,7 @@
 set(
   AMBISCREEN_SOURCES
   main.cpp
+  ScreenManager.cpp
 )
 
 add_executable(
