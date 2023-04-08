@@ -2,14 +2,32 @@
 
 
 set(
-  AMBISCREEN_SOURCES
+  UTILS_DIR
+  utils
+)
+
+file(GLOB_RECURSE UTILS_SRC
+  "${UTILS_DIR}/*.cpp"
+  "${UTILS_DIR}/*.hpp"
+  "${UTILS_DIR}/*.h"
+)
+
+set(
+  AMBISCREEN_SRC
   main.cpp
   ScreenManager.cpp
+  ScreenManager.h
 )
 
 add_executable(
   AmbiScreen
-  ${AMBISCREEN_SOURCES}
+  ${AMBISCREEN_SRC}
+  ${UTILS_SRC}
+)
+
+target_include_directories(
+  AmbiScreen PRIVATE
+  ${UTILS_DIR}
 )
 
 target_link_libraries(
@@ -18,6 +36,7 @@ target_link_libraries(
   Dwmapi
 )
 
+source_group("utils" FILES ${UTILS_SRC})
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET AmbiScreen PROPERTY CXX_STANDARD 20)
