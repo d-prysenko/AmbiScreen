@@ -1,10 +1,13 @@
 ﻿#include <iostream>
 
 #include "ScreenManager.h"
+#include "Serial.hpp"
 
-//const int VERTICAL_LEDS_COUNT = 30;
+const int VERTICAL_LEDS_COUNT = 30;
 const int HORIZONTAL_LEDS_COUNT = 20;
-#define VERTICAL_LEDS_COUNT 30
+
+#define BUFSIZE 1024
+
 
 
 int main()
@@ -22,9 +25,12 @@ int main()
     //     usbManager.send(serialize(sections));
     // }
 
-    ScreenManager screenManager = ScreenManager(HORIZONTAL_LEDS_COUNT, VERTICAL_LEDS_COUNT);
+
+	Serial serial("COM1");
+
+    ScreenManager* screenManager = ScreenManager::getInstance(HORIZONTAL_LEDS_COUNT, VERTICAL_LEDS_COUNT);
     
-    screenManager.startCapture();
+    screenManager->startCapture();
 
 	return 0;
 }

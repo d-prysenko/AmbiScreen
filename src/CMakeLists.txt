@@ -1,5 +1,17 @@
 ﻿# CMakeList.txt : CMake project for AmbiScreen
 
+if (NOT "${Boost_INCLUDE_DIR_override}" STREQUAL "DEFAULT")
+    set(Boost_INCLUDE_DIR "${Boost_INCLUDE_DIR_override}")
+endif()
+
+find_package(Boost 1.82.0 REQUIRED)
+
+if(!Boost_FOUND)
+    message(FATAL_ERROR "Boost not found")
+endif()
+
+message(STATUS Boost_LIBRARY_DIRS="${Boost_LIBRARY_DIRS}")
+message(STATUS Boost_INCLUDE_DIRS="${Boost_INCLUDE_DIRS}")
 
 set(
   UTILS_DIR
@@ -28,12 +40,16 @@ add_executable(
 target_include_directories(
   AmbiScreen PRIVATE
   ${UTILS_DIR}
+  ${Boost_INCLUDE_DIRS}
 )
 
+LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+
 target_link_libraries(
-  AmbiScreen PRIVATE
-  screen_capture_lite_static
-  Dwmapi
+    AmbiScreen PRIVATE
+    screen_capture_lite_static
+    Dwmapi
+    ${Boost_LIBRARIES}
 )
 
 source_group("utils" FILES ${UTILS_SRC})

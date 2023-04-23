@@ -13,24 +13,23 @@ inline std::ostream& operator<<(std::ostream& os, const SL::Screen_Capture::Moni
         << " OffsetY=" << p.OffsetY << " Name=" << p.Name;
 }
 
-class Image
+namespace COM
 {
-public:
-	static void ExtractAndConvertToRGBA(const SL::Screen_Capture::Image& img, unsigned char* dst, size_t dst_size)
+
+    typedef const SL::Screen_Capture::ImageBGRA* ImageData;
+
+    struct Image
     {
-        assert(dst_size >= static_cast<size_t>(SL::Screen_Capture::Width(img) * SL::Screen_Capture::Height(img) * sizeof(SL::Screen_Capture::ImageBGRA)));
-        auto imgsrc = StartSrc(img);
-        auto imgdist = dst;
-        for (auto h = 0; h < Height(img); h++) {
-            auto startimgsrc = imgsrc;
-            for (auto w = 0; w < Width(img); w++) {
-                *imgdist++ = imgsrc->R;
-                *imgdist++ = imgsrc->G;
-                *imgdist++ = imgsrc->B;
-                *imgdist++ = 0;
-                imgsrc++;
-            }
-            imgsrc = SL::Screen_Capture::GotoNextRow(img, startimgsrc);
+        const ImageData data;
+        
+        Image(const SL::Screen_Capture::Image& img)
+            : data(img.Data)
+        { }
+
+        ImageData getData() const
+        {
+            return data;
         }
-    }
-};
+    };
+}
+

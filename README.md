@@ -1,0 +1,5 @@
+## Installaion
+
+**Requirements:**
+- cmake
+- boost
