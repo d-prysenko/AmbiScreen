@@ -3,7 +3,7 @@
 ScreenManager* ScreenManager::p_instance = nullptr;
 
 ScreenManager::ScreenManager(int hSectCount, int vSectCount)
-	: frameGrabber(onNewFrameWrapper)
+	: frameGrabber(onNewFrameWrapper), sectionsBuffer(hSectCount, vSectCount)
 {
 	this->hSectCount = hSectCount;
 	this->vSectCount = vSectCount;
@@ -15,17 +15,13 @@ ScreenManager::ScreenManager(int hSectCount, int vSectCount)
 	vSectWidth = height / vSectCount;
 
 	sectDepth = hSectWidth;
-
-	sections.top = new Pixel[hSectCount];
-	sections.bottom = new Pixel[hSectCount];
-	sections.left = new Pixel[vSectCount];
-	sections.right = new Pixel[vSectCount];
 }
 
-
-FrameSectionsBuffer ScreenManager::getSections()
+FrameSections* ScreenManager::getCurrentSections()
 {
-	return sections;
+	// wait for FrameSections::flush
+	sectionsBuffer.waitForFlush();
+	return sectionsBuffer.getCurrentSection();
 }
 
 void ScreenManager::startCapture()
@@ -44,16 +40,20 @@ void ScreenManager::onNewFrameWrapper(const COM::Image& img)
 void ScreenManager::onNewFrame(const COM::Image& img)
 {
 	COM::ImageData imgsrc = img.getData();
-
+		
 	{
-		// lock here?
+		FrameSections* section = sectionsBuffer.getNextSection();
 
-		memset(sections.top, 0, hSectCount * sizeof(Pixel));
-		memset(sections.bottom, 0, hSectCount * sizeof(Pixel));
+		const std::lock_guard<std::mutex> lock(section->mtx);
 
-		getTopPixelLine(imgsrc, sections.top);
-		getBottomPixelLine(imgsrc, sections.bottom);
+		sectionsBuffer.cleanNextSection();
+
+		getTopPixelLine(imgsrc, section->top);
+		getBottomPixelLine(imgsrc, section->bottom);
+
+		sectionsBuffer.flush();
 	}
+
 }
 
 void ScreenManager::getTopPixelLine(const COM::ImageData src, Pixel* top)
@@ -68,6 +68,8 @@ void ScreenManager::getBottomPixelLine(const COM::ImageData src, Pixel* bottom)
 
 void ScreenManager::getHorizontalPixelLine(const COM::ImageData src, Pixel* buffer, int firstRow)
 {
+	Pixel32 sections[256] = { 0 };
+
 	for (int col = 0; col < width; col++)
 	{
 		for (int row = firstRow; row < sectDepth; row++)
@@ -75,9 +77,9 @@ void ScreenManager::getHorizontalPixelLine(const COM::ImageData src, Pixel* buff
 			const int src_index = row * width + col;
 			const int sect = col / hSectWidth;
 
-			buffer[sect].R += src[src_index].R;
-			buffer[sect].G += src[src_index].G;
-			buffer[sect].B += src[src_index].B;
+			sections[sect].R += src[src_index].R;
+			sections[sect].G += src[src_index].G;
+			sections[sect].B += src[src_index].B;
 		}
 	}
 
@@ -85,8 +87,8 @@ void ScreenManager::getHorizontalPixelLine(const COM::ImageData src, Pixel* buff
 
 	for (int i = 0; i < hSectCount; i++)
 	{
-		buffer[i].R /= sectPixelsCount;
-		buffer[i].G /= sectPixelsCount;
-		buffer[i].B /= sectPixelsCount;
+		buffer[i].R = sections[i].R / sectPixelsCount;
+		buffer[i].G = sections[i].G / sectPixelsCount;
+		buffer[i].B = sections[i].B / sectPixelsCount;
 	}
 }

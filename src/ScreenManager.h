@@ -2,9 +2,11 @@
 #include <cstdint>
 #include <chrono>
 #include <exception>
+#include <condition_variable>
 
 #include "utils/Image.hpp"
 #include "utils/FrameGrabber.hpp"
+#include "FrameSection.hpp"
 
 enum CornerResolveMethod : uint8_t
 {
@@ -13,23 +15,13 @@ enum CornerResolveMethod : uint8_t
 	Intersection,
 };
 
-struct Pixel
-{
-	uint8_t R, G, B;
-};
-
-struct FrameSectionsBuffer
-{
-	Pixel* top, * bottom, * left, * right;
-};
-
 class ScreenManager
 {
 public:
 	/// <param name="hSectCount">Vertical sections count</param>
 	/// <param name="vSectCount">Horizontal Sections count</param>
 	ScreenManager(int hSectCount, int vSectCount);
-
+	
 private:
 
 	static ScreenManager* p_instance;
@@ -46,8 +38,10 @@ private:
 	int vSectWidth;
 	int sectDepth;
 
-	FrameSectionsBuffer sections;
+	FrameSectionsBuffer sectionsBuffer;
 
+	std::condition_variable cv;
+	std::mutex mutex;
 	//CornerResolveMethod cornerResolveMethod;
 
 
@@ -69,9 +63,9 @@ public:
 
 	//bool isCapturing();
 
-	FrameSectionsBuffer getSections();
+	FrameSections* getCurrentSections();
 
-	
+
 
 private:
 	static void onNewFrameWrapper(const COM::Image& img);

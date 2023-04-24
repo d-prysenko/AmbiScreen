@@ -2,6 +2,8 @@
 #include <iostream>
 #include <ScreenCapture.h>
 
+#include "Serializable.hpp"
+
 inline std::ostream& operator<<(std::ostream& os, const SL::Screen_Capture::ImageRect& p)
 {
     return os << "left=" << p.left << " top=" << p.top << " right=" << p.right << " bottom=" << p.bottom;
@@ -12,6 +14,16 @@ inline std::ostream& operator<<(std::ostream& os, const SL::Screen_Capture::Moni
     return os << "Id=" << p.Id << " Index=" << p.Index << " Height=" << p.Height << " Width=" << p.Width << " OffsetX=" << p.OffsetX
         << " OffsetY=" << p.OffsetY << " Name=" << p.Name;
 }
+
+struct Pixel
+{
+	uint8_t R, G, B;
+};
+
+struct Pixel32
+{
+	uint32_t R, G, B;
+};
 
 namespace COM
 {

@@ -19,11 +19,22 @@ public:
 
 	int read(char* buffer, int buffer_size)
 	{
-		return serial.read_some(boost::asio::buffer(buffer, buffer_size));
+		//serial.read_some(boost::asio::buffer(buffer, buffer_size));
+		return boost::asio::read(serial, boost::asio::buffer(buffer, buffer_size));
 	}
 
 	int write(std::string buffer)
 	{
 		return serial.write_some(boost::asio::buffer(buffer.c_str(), buffer.size()));
+	}
+
+	int write(std::vector<uint8_t> buffer)
+	{
+		return serial.write_some(boost::asio::buffer(buffer));
+	}
+
+	int write(Serializable* buffer)
+	{
+		return serial.write_some(boost::asio::buffer(buffer->serialize()));
 	}
 };
