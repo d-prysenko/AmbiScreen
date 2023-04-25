@@ -29,7 +29,6 @@ set(
   main.cpp
   ScreenManager.cpp
   ScreenManager.h
-  FrameSection.hpp
 )
 
 add_executable(

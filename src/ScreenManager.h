@@ -6,7 +6,7 @@
 
 #include "utils/Image.hpp"
 #include "utils/FrameGrabber.hpp"
-#include "FrameSection.hpp"
+#include "utils/FrameSection.hpp"
 
 enum CornerResolveMethod : uint8_t
 {

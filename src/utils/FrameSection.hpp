@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <condition_variable>
+#include <iostream>
 
 #include "utils/Image.hpp"
 
@@ -49,7 +50,7 @@ struct FrameSections : public Serializable
 		res.push_back(height);
 
 		// data
-		for (int i = 0; i < width; i++)
+		for (int i = width - 1; i >= 0; i--)
 		{
 			res.push_back(top[i].R);
 			res.push_back(top[i].G);
@@ -77,6 +78,21 @@ struct FrameSections : public Serializable
 			res.push_back(left[i].B);
 		}
 
+		//for (int i = 0; i < 4; i++)
+		//{
+		//	printf("%02X ", res[i]);
+		//}
+		//printf("\n");
+		//for (int i = 0; i < 2; i++)
+		//{
+		//	printf("%02X ", res[4 + i]);
+		//}
+		//printf("\n");
+		//for (int i = 0; i < width; i++)
+		//{
+		//	printf("(%02X %02X %02X) ", res[6 + 3*i], res[6 + 3 * i + 1], res[6 + 3 * i + 2]);
+		//}
+		//printf("\n");
 		return res;
 	}
 };

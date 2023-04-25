@@ -80,14 +80,14 @@ public:
 	{
 		std::vector<Monitor> monitors = SL::Screen_Capture::GetMonitors();
 		Monitor monitor = monitors.back();
-		return monitor.Height;
+		return monitor.Width;
 	}
 
 	int getHeight()
 	{
 		std::vector<Monitor> monitors = SL::Screen_Capture::GetMonitors();
 		Monitor monitor = monitors.back();
-		return monitor.Width;
+		return monitor.Height;
 	}
 
 };

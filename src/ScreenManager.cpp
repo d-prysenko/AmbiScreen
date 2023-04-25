@@ -14,7 +14,7 @@ ScreenManager::ScreenManager(int hSectCount, int vSectCount)
 	hSectWidth = width / hSectCount;
 	vSectWidth = height / vSectCount;
 
-	sectDepth = hSectWidth;
+	sectDepth = height / 5;
 }
 
 FrameSections* ScreenManager::getCurrentSections()

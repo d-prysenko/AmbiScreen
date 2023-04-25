@@ -1,5 +1,5 @@
 #include <boost/asio.hpp>
-
+#include <iostream>
 class Serial
 {
 private:
@@ -15,6 +15,7 @@ public:
 		serial.set_option(boost::asio::serial_port_base::character_size(8));
 		serial.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
 		serial.set_option(boost::asio::serial_port_base::stop_bits(boost::asio::serial_port_base::stop_bits::one));
+		serial.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::software));
 	}
 
 	int read(char* buffer, int buffer_size)
@@ -30,11 +31,14 @@ public:
 
 	int write(std::vector<uint8_t> buffer)
 	{
-		return serial.write_some(boost::asio::buffer(buffer));
+		printf("buffer.size() = %d\n", buffer.size());
+		return serial.write_some(boost::asio::buffer(buffer, buffer.size()));
 	}
 
 	int write(Serializable* buffer)
 	{
-		return serial.write_some(boost::asio::buffer(buffer->serialize()));
+		//serial.write_some(boost::asio::buffer(buffer->serialize()));
+		
+		return boost::asio::write(serial, boost::asio::buffer(buffer->serialize()));
 	}
 };
