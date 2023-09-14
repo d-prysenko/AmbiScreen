@@ -72,8 +72,8 @@ public:
 	{
 		auto framgrabber = captureConfig->start_capturing();
 
-		framgrabber->setFrameChangeInterval(std::chrono::milliseconds(70));
-		framgrabber->setMouseChangeInterval(std::chrono::milliseconds(70));
+		framgrabber->setFrameChangeInterval(std::chrono::milliseconds(20));
+		framgrabber->setMouseChangeInterval(std::chrono::milliseconds(20));
 	}
 
 	int getWidth()

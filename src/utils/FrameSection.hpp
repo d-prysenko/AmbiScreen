@@ -52,30 +52,30 @@ struct FrameSections : public Serializable
 		// data
 		for (int i = width - 1; i >= 0; i--)
 		{
-			res.push_back(top[i].R);
-			res.push_back(top[i].G);
-			res.push_back(top[i].B);
-		}
-
-		for (int i = height - 1; i >= 0 ; i--)
-		{
-			res.push_back(right[i].R);
-			res.push_back(right[i].G);
-			res.push_back(right[i].B);
-		}
-
-		for (int i = width - 1; i >= 0; i--)
-		{
 			res.push_back(bottom[i].R);
 			res.push_back(bottom[i].G);
 			res.push_back(bottom[i].B);
 		}
 
-		for (int i = 0; i < height; i++)
+		for (int i = height - 1; i >= 0; i--)
 		{
 			res.push_back(left[i].R);
 			res.push_back(left[i].G);
 			res.push_back(left[i].B);
+		}
+
+		for (int i = 0; i < width; i++)
+		{
+			res.push_back(top[i].R);
+			res.push_back(top[i].G);
+			res.push_back(top[i].B);
+		}
+
+		for (int i = 0; i < height; i++)
+		{
+			res.push_back(right[i].R);
+			res.push_back(right[i].G);
+			res.push_back(right[i].B);
 		}
 
 		//for (int i = 0; i < 4; i++)
@@ -104,9 +104,11 @@ struct FrameSectionsBuffer
 
 	bool flushed = false;
 
-	uint8_t bufferDepth = 2;
+	uint8_t bufferDepth = 3;
 
 	FrameSections** sections = nullptr;
+
+	FrameSections* smoothSections;
 
 	uint8_t currentSection = 0;
 
@@ -117,13 +119,18 @@ struct FrameSectionsBuffer
 		: sections(new FrameSections* [bufferDepth])
 	{}
 
-	FrameSectionsBuffer(uint8_t width, uint8_t height, uint8_t bufferDepth = 2)
-		: sections(new FrameSections* [bufferDepth]), width(width), height(height), bufferDepth(bufferDepth)
+	FrameSectionsBuffer(uint8_t width, uint8_t height, uint8_t bufferDepth)
+		: sections(new FrameSections* [bufferDepth]), smoothSections(new FrameSections(width, height)), width(width), height(height), bufferDepth(bufferDepth)
 	{
 		for (int i = 0; i < bufferDepth; i++)
 		{
 			sections[i] = new FrameSections(width, height);
 		}
+	}
+
+	FrameSections* getPreviousSection()
+	{
+		return sections[(bufferDepth + currentSection - 1) % bufferDepth];
 	}
 
 	FrameSections* getCurrentSection()
