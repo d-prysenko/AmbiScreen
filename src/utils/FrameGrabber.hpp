@@ -1,5 +1,5 @@
 #include <ScreenCapture.h>
-#include "utils/Image.hpp"
+#include "Image.hpp"
 
 using SL::Screen_Capture::ICaptureConfiguration;
 using SL::Screen_Capture::ScreenCaptureCallback;
@@ -47,7 +47,7 @@ private:
 		else
 		{
 			std::cerr << "Cannot Capture the screen due to permission issues. Exiting" << std::endl;
-			throw std::exception("Cannot Capture the screen due to permission issues. Exiting");
+			throw std::runtime_error("Cannot Capture the screen due to permission issues. Exiting");
 		}
 	}
 

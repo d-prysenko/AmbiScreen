@@ -6,9 +6,14 @@
 const int HORIZONTAL_LEDS_COUNT = 31;
 const int VERTICAL_LEDS_COUNT = 18;
 
-int main()
+int main(int argc, char *argv[])
 {
-	Serial serial("COM3");
+    if (argc != 2) {
+        printf("Wrong arguments, need port name, argc: %d\n", argc);
+        return -1;
+    }
+
+	Serial serial(argv[1]);
 
     ScreenManager* screenManager = ScreenManager::getInstance(HORIZONTAL_LEDS_COUNT, VERTICAL_LEDS_COUNT);
     

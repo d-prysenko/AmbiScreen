@@ -3,7 +3,7 @@
 #include <condition_variable>
 #include <iostream>
 
-#include "utils/Image.hpp"
+#include "Image.hpp"
 
 struct FrameSections : public Serializable
 {
